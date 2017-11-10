@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+       - echo Logging in to Amazon ECR..
+       - pip install awscli --upgrade --user
+       - $(aws ecr get-login --no-include-email --region ap-southeast-2)
+  build:
+    commands:
+        - docker build -t build_cfn_nag .
+        - docker tag build_cfn_nag:latest 452161641512.dkr.ecr.ap-southeast-2.amazonaws.com/build_cfn_nag:latest
+  post_build:
+    commands:
+       - docker push 452161641512.dkr.ecr.ap-southeast-2.amazonaws.com/build_cfn_nag:latest
